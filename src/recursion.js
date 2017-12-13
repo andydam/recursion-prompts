@@ -91,13 +91,14 @@ var range = function(x, y) {
   if (x === y) {
     return [];
   }
-  
-  if (x < y) {
-    return [x].concat(range(x + 1, y));
+  if (x + 1 === y || y + 1 === x) {
+    return [];
   }
-
-  if (y < x) {
-
+  if (x < y) {
+    return [x + 1].concat(range(x + 1, y));
+  }
+  if (x > y) {
+    return [x - 1].concat(range(x - 1, y));
   }
 };
 
@@ -164,11 +165,53 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  if (x === 0 && y === 0) {
+    return NaN;
+  }
+  if (x === 0 || y === 0) {
+    return 0;
+  }
+  if (x > 0) {
+    if (x - y < 0) {
+      return x;
+    }
+    return modulo(x - y, y);
+  } else {
+    if (y < 0) {
+      if (x - y > 0) {
+        return x;
+      }
+      return modulo(x - y, y);
+    } else {
+      if (x + y > 0) {
+        return x;
+      }
+      return modulo(x + y, y);
+    }
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  if (y === 0) {
+    return 0;
+  }
+  if (x === 0) {
+    return 0;
+  }
+  if (x > 0 && y > 0) {
+    return x + multiply(x, y - 1);
+  }
+  if (x > 0 && y < 0) {
+    return 0 - x + multiply(x, y + 1);
+  }
+  if (x < 0 && y > 0) {
+    return x + multiply(x, y - 1);
+  }
+  if ( x < 0 && y < 0) {
+    return 0 - x + multiply(x, y + 1);
+  }
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
@@ -238,16 +281,39 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+  if (n === 0) {
+    return [];
+  }
+  if (n % 5 === 0 && n % 3 === 0) {
+    return fizzBuzz(n - 1).concat(['FizzBuzz']);
+  }
+  if (n % 5 === 0) {
+    return fizzBuzz(n - 1).concat(['Buzz']);
+  }
+  if (n % 3 === 0) {
+    return fizzBuzz(n - 1).concat(['Fizz']);
+  }
+
+  return fizzBuzz(n - 1).concat([String(n)]);
 };
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+  if (array.length === 1) {
+    if (array[0] === value) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  if (array[0] === value) {
+    return 1 + countOccurrence(array.slice(1), value);
+  } else {
+    return 0 + countOccurrence(array.slice(1), value);
+  }
 };
-
-
-
 
 
 /** OPTIONAL EXERCISES (21-40) **/
